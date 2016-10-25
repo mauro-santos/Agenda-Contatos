@@ -2,6 +2,9 @@ package br.com.maurosantos.android.agendadecontatos;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -79,5 +82,27 @@ public class NewContactActivity extends AppCompatActivity {
         adpTipoDatasEspeciais.add("Aniversário");
         adpTipoDatasEspeciais.add("Data Comemorativa");
         adpTipoDatasEspeciais.add("Outros");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_new_contact, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mn_salvar:
+                break;
+            case R.id.mn_alterar:
+                break;
+            case R.id.mn_excluir:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
