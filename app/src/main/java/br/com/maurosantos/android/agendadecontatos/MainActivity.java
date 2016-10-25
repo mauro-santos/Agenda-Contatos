@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+
+import br.com.maurosantos.android.agendadecontatos.database.DataBase;
+import br.com.maurosantos.android.agendadecontatos.dominio.RepositorioContato;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -17,8 +21,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText edtPesquisa;
     private ListView lstContatos;
 
+    private ArrayAdapter<String> adpContatos;
+
     private DataBase dataBase;
     private SQLiteDatabase conn;
+    private RepositorioContato repositorioContato;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +40,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         try {
             dataBase = new DataBase(this);
-            conn = dataBase.getReadableDatabase();
+            conn = dataBase.getWritableDatabase();
+
+            repositorioContato = new RepositorioContato(conn);
+
+            repositorioContato.inserirContatos();
+
+            adpContatos = repositorioContato.listaContatos(this);
+
+            lstContatos.setAdapter(adpContatos);
 
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setMessage("Conexão criada com sucesso!");

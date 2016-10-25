@@ -1,4 +1,4 @@
-package br.com.maurosantos.android.agendadecontatos;
+package br.com.maurosantos.android.agendadecontatos.database;
 
 /**
  * Created by maurosantos on 25/10/2016.
