@@ -1,7 +1,10 @@
 package br.com.maurosantos.android.agendadecontatos;
 
 import android.content.Intent;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -14,6 +17,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText edtPesquisa;
     private ListView lstContatos;
 
+    private DataBase dataBase;
+    private SQLiteDatabase conn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +30,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lstContatos = (ListView) findViewById(R.id.lstContatos);
 
         btnAdicionar.setOnClickListener(this);
+
+        try {
+            dataBase = new DataBase(this);
+            conn = dataBase.getReadableDatabase();
+
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Conexão criada com sucesso!");
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        } catch (SQLException ex) {
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Erro ao criar o banco: " + ex.getMessage());
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        }
     }
 
     @Override
