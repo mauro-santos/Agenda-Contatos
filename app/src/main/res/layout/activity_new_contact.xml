@@ -50,16 +50,16 @@
 
             <EditText
                 android:id="@+id/edtTelefone"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:inputType="phone" />
 
             <Spinner
                 android:id="@+id/spnTipoTelefone"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="2" />
 
         </LinearLayout>
     </LinearLayout>
@@ -83,16 +83,16 @@
 
             <EditText
                 android:id="@+id/edtEmail"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:inputType="textEmailAddress" />
 
             <Spinner
                 android:id="@+id/spnTipoEmail"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="2" />
 
         </LinearLayout>
     </LinearLayout>
@@ -116,16 +116,16 @@
 
             <EditText
                 android:id="@+id/edtEndereco"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:inputType="textPersonName" />
 
             <Spinner
                 android:id="@+id/spnTipoEndereco"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="2" />
 
         </LinearLayout>
     </LinearLayout>
@@ -149,16 +149,16 @@
 
             <EditText
                 android:id="@+id/edtDatasEspeciais"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:inputType="date" />
 
             <Spinner
                 android:id="@+id/spnTipoDatasEspeciais"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="2" />
 
         </LinearLayout>
     </LinearLayout>

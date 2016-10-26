@@ -1,5 +1,6 @@
 package br.com.maurosantos.android.agendadecontatos;
 
+import android.app.DatePickerDialog;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -8,10 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import br.com.maurosantos.android.agendadecontatos.database.DataBase;
@@ -97,6 +102,12 @@ public class NewContactActivity extends AppCompatActivity {
         adpTipoDatasEspeciais.add("Data Comemorativa");
         adpTipoDatasEspeciais.add("Outros");
 
+        contato = new Contato();
+
+        ExibeDataListener listener = new ExibeDataListener();
+        edtDatasEspeciais.setOnClickListener(listener);
+        edtDatasEspeciais.setOnFocusChangeListener(listener);
+
         try {
             dataBase = new DataBase(this);
             conn = dataBase.getWritableDatabase();
@@ -139,19 +150,19 @@ public class NewContactActivity extends AppCompatActivity {
 
     public void inserir() {
         try {
-            contato = new Contato();
-
             contato.setNome(edtNome.getText().toString());
             contato.setTelefone(edtTelefone.getText().toString());
             contato.setEmail(edtEmail.getText().toString());
             contato.setEndereco(edtEndereco.getText().toString());
-            contato.setDatasEspeciais(new Date());
+
+            //contato.setDatasEspeciais(new Date());
+
             contato.setGrupos(edtGrupos.getText().toString());
 
-            contato.setTipoTelefone("");
-            contato.setTipoEmail("");
-            contato.setTipoEndereco("");
-            contato.setTipoDatasEspeciais("");
+            contato.setTipoTelefone(String.valueOf(spnTipoTelefone.getSelectedItemPosition()));
+            contato.setTipoEmail(String.valueOf(spnTipoEmail.getSelectedItemPosition()));
+            contato.setTipoEndereco(String.valueOf(spnTipoEndereco.getSelectedItemPosition()));
+            contato.setTipoDatasEspeciais(String.valueOf(spnTipoDatasEspeciais.getSelectedItemPosition()));
 
             repositorioContato.inserirContato(contato);
         } catch (Exception ex) {
@@ -159,6 +170,42 @@ public class NewContactActivity extends AppCompatActivity {
             dlg.setMessage("Erro ao inserir os dados: " + ex.getMessage());
             dlg.setNeutralButton("OK", null);
             dlg.show();
+        }
+    }
+
+    private void exibeData() {
+        Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog dlg = new DatePickerDialog(this, new SelecionaDataListener(), calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        dlg.show();
+    }
+
+    private class ExibeDataListener implements View.OnClickListener, View.OnFocusChangeListener {
+        @Override
+        public void onClick(View v) {
+            exibeData();
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus)
+                exibeData();
+        }
+    }
+
+    private class SelecionaDataListener implements DatePickerDialog.OnDateSetListener {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, dayOfMonth);
+            Date data = calendar.getTime();
+
+            DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
+            String dt = format.format(data);
+
+            edtDatasEspeciais.setText(dt);
+
+            contato.setDatasEspeciais(data);
         }
     }
 }
