@@ -10,6 +10,7 @@ public class ScriptSQL {
 
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS CONTATO ( ");
         sqlBuilder.append("_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ");
+        sqlBuilder.append("NOME VARCHAR(200), ");
         sqlBuilder.append("TELEFONE VARCHAR(14), ");
         sqlBuilder.append("TIPOTELEFONE VARCHAR(1), ");
         sqlBuilder.append("EMAIL VARCHAR(255), ");

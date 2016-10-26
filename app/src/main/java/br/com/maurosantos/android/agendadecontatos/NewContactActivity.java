@@ -1,6 +1,9 @@
 package br.com.maurosantos.android.agendadecontatos;
 
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -8,6 +11,12 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import java.util.Date;
+
+import br.com.maurosantos.android.agendadecontatos.database.DataBase;
+import br.com.maurosantos.android.agendadecontatos.dominio.RepositorioContato;
+import br.com.maurosantos.android.agendadecontatos.dominio.entidades.Contato;
 
 public class NewContactActivity extends AppCompatActivity {
 
@@ -27,6 +36,11 @@ public class NewContactActivity extends AppCompatActivity {
     private ArrayAdapter<String> adpTipoEmail;
     private ArrayAdapter<String> adpTipoEndereco;
     private ArrayAdapter<String> adpTipoDatasEspeciais;
+
+    private DataBase dataBase;
+    private SQLiteDatabase conn;
+    private RepositorioContato repositorioContato;
+    private Contato contato;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +96,19 @@ public class NewContactActivity extends AppCompatActivity {
         adpTipoDatasEspeciais.add("Aniversário");
         adpTipoDatasEspeciais.add("Data Comemorativa");
         adpTipoDatasEspeciais.add("Outros");
+
+        try {
+            dataBase = new DataBase(this);
+            conn = dataBase.getWritableDatabase();
+
+            repositorioContato = new RepositorioContato(conn);
+
+        } catch (SQLException ex) {
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Erro ao conectar ao banco de dados: " + ex.getMessage());
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        }
     }
 
     @Override
@@ -96,6 +123,10 @@ public class NewContactActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mn_salvar:
+                if (contato == null) {
+                    inserir();
+                }
+                finish();
                 break;
             case R.id.mn_alterar:
                 break;
@@ -104,5 +135,30 @@ public class NewContactActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void inserir() {
+        try {
+            contato = new Contato();
+
+            contato.setNome(edtNome.getText().toString());
+            contato.setTelefone(edtTelefone.getText().toString());
+            contato.setEmail(edtEmail.getText().toString());
+            contato.setEndereco(edtEndereco.getText().toString());
+            contato.setDatasEspeciais(new Date());
+            contato.setGrupos(edtGrupos.getText().toString());
+
+            contato.setTipoTelefone("");
+            contato.setTipoEmail("");
+            contato.setTipoEndereco("");
+            contato.setTipoDatasEspeciais("");
+
+            repositorioContato.inserirContato(contato);
+        } catch (Exception ex) {
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Erro ao inserir os dados: " + ex.getMessage());
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        }
     }
 }
