@@ -1,12 +1,25 @@
 package br.com.maurosantos.android.agendadecontatos.dominio.entidades;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by maurosantos on 26/10/2016.
  */
 
-public class Contato {
+public class Contato implements Serializable {
+    public static String ID = "_id";
+    public static String NOME = "NOME";
+    public static String TELEFONE = "TELEFONE";
+    public static String TIPOTELEFONE = "TIPOTELEFONE";
+    public static String EMAIL = "EMAIL";
+    public static String TIPOEMAIL = "TIPOEMAIL";
+    public static String ENDERECO = "ENDERECO";
+    public static String TIPOENDERECO = "TIPOENDERECO";
+    public static String DATASESPECIAIS = "DATASESPECIAIS";
+    public static String TIPODATASESPECIAIS = "TIPODATASESPECIAIS";
+    public static String GRUPOS = "GRUPOS";
+
     private long id;
     private String nome;
     private String telefone;

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,7 +17,7 @@ import br.com.maurosantos.android.agendadecontatos.database.DataBase;
 import br.com.maurosantos.android.agendadecontatos.dominio.RepositorioContato;
 import br.com.maurosantos.android.agendadecontatos.dominio.entidades.Contato;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private ImageButton btnAdicionar;
     private EditText edtPesquisa;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lstContatos = (ListView) findViewById(R.id.lstContatos);
 
         btnAdicionar.setOnClickListener(this);
+        lstContatos.setOnItemClickListener(this);
 
         try {
             dataBase = new DataBase(this);
@@ -66,5 +68,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         adpContatos = repositorioContato.listaContatos(this);
         lstContatos.setAdapter(adpContatos);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Contato contato = adpContatos.getItem(position);
+
+        Intent it = new Intent(this, NewContactActivity.class);
+        it.putExtra("CONTATO", contato);
+
+        startActivityForResult(it, 0);
     }
 }

@@ -51,16 +51,17 @@ public class RepositorioContato {
             do {
                 Contato contato = new Contato();
 
-                contato.setNome(cursor.getString(1));
-                contato.setTelefone(cursor.getString(2));
-                contato.setTipoTelefone(cursor.getString(3));
-                contato.setEmail(cursor.getString(4));
-                contato.setTipoEmail(cursor.getString(5));
-                contato.setEndereco(cursor.getString(6));
-                contato.setTipoEndereco(cursor.getString(7));
-                contato.setDatasEspeciais(new Date(cursor.getLong(8)));
-                contato.setTipoDatasEspeciais(cursor.getString(9));
-                contato.setGrupos(cursor.getString(10));
+                contato.setId(cursor.getLong(cursor.getColumnIndex(Contato.ID)));
+                contato.setNome(cursor.getString(cursor.getColumnIndex(Contato.NOME)));
+                contato.setTelefone(cursor.getString(cursor.getColumnIndex(Contato.TELEFONE)));
+                contato.setTipoTelefone(cursor.getString(cursor.getColumnIndex(Contato.TIPOTELEFONE)));
+                contato.setEmail(cursor.getString(cursor.getColumnIndex(Contato.EMAIL)));
+                contato.setTipoEmail(cursor.getString(cursor.getColumnIndex(Contato.TIPOEMAIL)));
+                contato.setEndereco(cursor.getString(cursor.getColumnIndex(Contato.ENDERECO)));
+                contato.setTipoEndereco(cursor.getString(cursor.getColumnIndex(Contato.TIPOENDERECO)));
+                contato.setDatasEspeciais(new Date(cursor.getLong(cursor.getColumnIndex(Contato.DATASESPECIAIS))));
+                contato.setTipoDatasEspeciais(cursor.getString(cursor.getColumnIndex(Contato.TIPODATASESPECIAIS)));
+                contato.setGrupos(cursor.getString(cursor.getColumnIndex(Contato.GRUPOS)));
 
                 adpContatos.add(contato);
             } while (cursor.moveToNext());

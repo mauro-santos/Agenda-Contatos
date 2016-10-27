@@ -44,7 +44,7 @@ public class NewContactActivity extends AppCompatActivity {
     private DataBase dataBase;
     private SQLiteDatabase conn;
     private RepositorioContato repositorioContato;
-    private Contato contato = new Contato();
+    private Contato contato;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +105,15 @@ public class NewContactActivity extends AppCompatActivity {
         edtDatasEspeciais.setOnClickListener(listener);
         edtDatasEspeciais.setOnFocusChangeListener(listener);
 
+        Bundle bundle = getIntent().getExtras();
+
+        if ((bundle != null) && (bundle.containsKey("CONTATO"))) {
+            contato = ((Contato) bundle.getSerializable("CONTATO"));
+            preencheDados();
+        } else {
+            contato = new Contato();
+        }
+
         try {
             dataBase = new DataBase(this);
             conn = dataBase.getWritableDatabase();
@@ -142,6 +151,23 @@ public class NewContactActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void preencheDados()
+    {
+        edtNome.setText(contato.getNome());
+        edtTelefone.setText(contato.getTelefone());
+        spnTipoTelefone.setSelection(Integer.parseInt(contato.getTipoTelefone()));
+        edtEmail.setText(contato.getEmail());
+        spnTipoEmail.setSelection(Integer.parseInt(contato.getTipoEmail()));
+        edtEndereco.setText(contato.getEndereco());
+        spnTipoEndereco.setSelection(Integer.parseInt(contato.getTipoEndereco()));
+
+        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
+        String dt = format.format(contato.getDatasEspeciais());
+        edtDatasEspeciais.setText(dt);
+        spnTipoDatasEspeciais.setSelection(Integer.parseInt(contato.getTipoDatasEspeciais()));
+        edtGrupos.setText(contato.getGrupos());
+    }
+
     public boolean inserir() {
         try {
             contato.setNome(edtNome.getText().toString());
@@ -150,6 +176,7 @@ public class NewContactActivity extends AppCompatActivity {
             contato.setEndereco(edtEndereco.getText().toString());
             //contato.setDatasEspeciais: no método select.
             contato.setGrupos(edtGrupos.getText().toString());
+
             contato.setTipoTelefone(String.valueOf(spnTipoTelefone.getSelectedItemPosition()));
             contato.setTipoEmail(String.valueOf(spnTipoEmail.getSelectedItemPosition()));
             contato.setTipoEndereco(String.valueOf(spnTipoEndereco.getSelectedItemPosition()));
