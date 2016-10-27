@@ -24,7 +24,6 @@ import br.com.maurosantos.android.agendadecontatos.dominio.RepositorioContato;
 import br.com.maurosantos.android.agendadecontatos.dominio.entidades.Contato;
 
 public class NewContactActivity extends AppCompatActivity {
-
     private EditText edtNome;
     private EditText edtTelefone;
     private EditText edtEmail;
@@ -45,7 +44,7 @@ public class NewContactActivity extends AppCompatActivity {
     private DataBase dataBase;
     private SQLiteDatabase conn;
     private RepositorioContato repositorioContato;
-    private Contato contato;
+    private Contato contato = new Contato();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +101,6 @@ public class NewContactActivity extends AppCompatActivity {
         adpTipoDatasEspeciais.add("Data Comemorativa");
         adpTipoDatasEspeciais.add("Outros");
 
-        contato = new Contato();
-
         ExibeDataListener listener = new ExibeDataListener();
         edtDatasEspeciais.setOnClickListener(listener);
         edtDatasEspeciais.setOnFocusChangeListener(listener);
@@ -111,9 +108,7 @@ public class NewContactActivity extends AppCompatActivity {
         try {
             dataBase = new DataBase(this);
             conn = dataBase.getWritableDatabase();
-
             repositorioContato = new RepositorioContato(conn);
-
         } catch (SQLException ex) {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setMessage("Erro ao conectar ao banco de dados: " + ex.getMessage());
@@ -134,10 +129,9 @@ public class NewContactActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mn_salvar:
-                if (contato == null) {
-                    inserir();
+                if (inserir()) {
+                    finish();
                 }
-                finish();
                 break;
             case R.id.mn_alterar:
                 break;
@@ -148,28 +142,38 @@ public class NewContactActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void inserir() {
+    public boolean inserir() {
         try {
             contato.setNome(edtNome.getText().toString());
             contato.setTelefone(edtTelefone.getText().toString());
             contato.setEmail(edtEmail.getText().toString());
             contato.setEndereco(edtEndereco.getText().toString());
-
-            //contato.setDatasEspeciais(new Date());
-
+            //contato.setDatasEspeciais: no método select.
             contato.setGrupos(edtGrupos.getText().toString());
-
             contato.setTipoTelefone(String.valueOf(spnTipoTelefone.getSelectedItemPosition()));
             contato.setTipoEmail(String.valueOf(spnTipoEmail.getSelectedItemPosition()));
             contato.setTipoEndereco(String.valueOf(spnTipoEndereco.getSelectedItemPosition()));
             contato.setTipoDatasEspeciais(String.valueOf(spnTipoDatasEspeciais.getSelectedItemPosition()));
 
-            repositorioContato.inserirContato(contato);
+            if (contato.getNome().isEmpty()) {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+                dlg.setMessage("Informe o nome");
+                dlg.setNeutralButton("OK", null);
+                dlg.show();
+
+                return false;
+            } else {
+                repositorioContato.inserirContato(contato);
+
+                return true;
+            }
         } catch (Exception ex) {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setMessage("Erro ao inserir os dados: " + ex.getMessage());
             dlg.setNeutralButton("OK", null);
             dlg.show();
+
+            return false;
         }
     }
 
@@ -188,8 +192,9 @@ public class NewContactActivity extends AppCompatActivity {
 
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus)
+            if (hasFocus) {
                 exibeData();
+            }
         }
     }
 
