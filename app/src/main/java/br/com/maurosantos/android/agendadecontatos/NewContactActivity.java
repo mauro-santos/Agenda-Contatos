@@ -131,6 +131,10 @@ public class NewContactActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_new_contact, menu);
 
+        if (contato.getId() != 0) {
+            menu.getItem(1).setVisible(true);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -138,21 +142,21 @@ public class NewContactActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mn_salvar:
-                if (inserir()) {
+                if (salvar()) {
                     finish();
                 }
                 break;
-            case R.id.mn_alterar:
-                break;
             case R.id.mn_excluir:
+                if (excluir()) {
+                    finish();
+                }
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void preencheDados()
-    {
+    private void preencheDados() {
         edtNome.setText(contato.getNome());
         edtTelefone.setText(contato.getTelefone());
         spnTipoTelefone.setSelection(Integer.parseInt(contato.getTipoTelefone()));
@@ -168,7 +172,7 @@ public class NewContactActivity extends AppCompatActivity {
         edtGrupos.setText(contato.getGrupos());
     }
 
-    public boolean inserir() {
+    private boolean salvar() {
         try {
             contato.setNome(edtNome.getText().toString());
             contato.setTelefone(edtTelefone.getText().toString());
@@ -190,13 +194,32 @@ public class NewContactActivity extends AppCompatActivity {
 
                 return false;
             } else {
-                repositorioContato.inserirContato(contato);
+                if (contato.getId() == 0) {
+                    repositorioContato.inserirContato(contato);
+                } else {
+                    repositorioContato.alterarContato(contato);
+                }
 
                 return true;
             }
         } catch (Exception ex) {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setMessage("Erro ao inserir os dados: " + ex.getMessage());
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+
+            return false;
+        }
+    }
+
+    private boolean excluir() {
+        try {
+            repositorioContato.excluirContato(contato.getId());
+
+            return true;
+        } catch (Exception ex) {
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Erro ao excluir os dados: " + ex.getMessage());
             dlg.setNeutralButton("OK", null);
             dlg.show();
 
