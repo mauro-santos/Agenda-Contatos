@@ -5,6 +5,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -52,6 +54,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             adpContatos = repositorioContato.listaContatos(this);
 
             lstContatos.setAdapter(adpContatos);
+
+            FiltraDados filtraDados = new FiltraDados(adpContatos);
+            edtPesquisa.addTextChangedListener(filtraDados);
+
         } catch (SQLException ex) {
             MessageBox.showAlert(this, "Erro", "Erro ao criar o banco de dados: " + ex.getMessage());
         }
@@ -77,5 +83,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         it.putExtra(PARAM_CONTATO, contato);
 
         startActivityForResult(it, 0);
+    }
+
+    private class FiltraDados implements TextWatcher {
+        private ArrayAdapter<Contato> arrayAdapter;
+
+        private FiltraDados(ArrayAdapter<Contato> arrayAdapter) {
+            this.arrayAdapter = arrayAdapter;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            arrayAdapter.getFilter().filter(s);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
     }
 }
