@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,13 +14,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
+import br.com.maurosantos.android.agendadecontatos.app.MessageBox;
+import br.com.maurosantos.android.agendadecontatos.app.ViewHelper;
 import br.com.maurosantos.android.agendadecontatos.database.DataBase;
 import br.com.maurosantos.android.agendadecontatos.dominio.RepositorioContato;
 import br.com.maurosantos.android.agendadecontatos.dominio.entidades.Contato;
+import br.com.maurosantos.android.agendadecontatos.util.DateUtils;
 
 public class NewContactActivity extends AppCompatActivity {
     private EditText edtNome;
@@ -63,22 +63,10 @@ public class NewContactActivity extends AppCompatActivity {
         spnTipoEndereco = (Spinner) findViewById(R.id.spnTipoEndereco);
         spnTipoDatasEspeciais = (Spinner) findViewById(R.id.spnTipoDatasEspeciais);
 
-        adpTipoTelefone = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adpTipoTelefone.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        adpTipoEmail = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adpTipoEmail.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        adpTipoEndereco = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adpTipoEndereco.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        adpTipoDatasEspeciais = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adpTipoDatasEspeciais.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spnTipoTelefone.setAdapter(adpTipoTelefone);
-        spnTipoEmail.setAdapter(adpTipoEmail);
-        spnTipoEndereco.setAdapter(adpTipoEndereco);
-        spnTipoDatasEspeciais.setAdapter(adpTipoDatasEspeciais);
+        adpTipoTelefone = ViewHelper.createArrayAdapter(this, spnTipoTelefone);
+        adpTipoEmail = ViewHelper.createArrayAdapter(this, spnTipoEmail);
+        adpTipoEndereco = ViewHelper.createArrayAdapter(this, spnTipoEndereco);
+        adpTipoDatasEspeciais = ViewHelper.createArrayAdapter(this, spnTipoDatasEspeciais);
 
         adpTipoTelefone.add("Casa");
         adpTipoTelefone.add("Trabalho");
@@ -107,8 +95,8 @@ public class NewContactActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        if ((bundle != null) && (bundle.containsKey("CONTATO"))) {
-            contato = ((Contato) bundle.getSerializable("CONTATO"));
+        if ((bundle != null) && (bundle.containsKey(MainActivity.PARAM_CONTATO))) {
+            contato = ((Contato) bundle.getSerializable(MainActivity.PARAM_CONTATO));
             preencheDados();
         } else {
             contato = new Contato();
@@ -119,10 +107,7 @@ public class NewContactActivity extends AppCompatActivity {
             conn = dataBase.getWritableDatabase();
             repositorioContato = new RepositorioContato(conn);
         } catch (SQLException ex) {
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Erro ao conectar ao banco de dados: " + ex.getMessage());
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
+            MessageBox.showAlert(this, "Erro", "Erro ao conectar ao banco de dados" + ex.getMessage());
         }
     }
 
@@ -164,10 +149,7 @@ public class NewContactActivity extends AppCompatActivity {
         spnTipoEmail.setSelection(Integer.parseInt(contato.getTipoEmail()));
         edtEndereco.setText(contato.getEndereco());
         spnTipoEndereco.setSelection(Integer.parseInt(contato.getTipoEndereco()));
-
-        DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
-        String dt = format.format(contato.getDatasEspeciais());
-        edtDatasEspeciais.setText(dt);
+        edtDatasEspeciais.setText(DateUtils.dateToString(contato.getDatasEspeciais()));
         spnTipoDatasEspeciais.setSelection(Integer.parseInt(contato.getTipoDatasEspeciais()));
         edtGrupos.setText(contato.getGrupos());
     }
@@ -187,11 +169,7 @@ public class NewContactActivity extends AppCompatActivity {
             contato.setTipoDatasEspeciais(String.valueOf(spnTipoDatasEspeciais.getSelectedItemPosition()));
 
             if (contato.getNome().isEmpty()) {
-                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-                dlg.setMessage("Informe o nome");
-                dlg.setNeutralButton("OK", null);
-                dlg.show();
-
+                MessageBox.showInfo(this, "Atenção", "Informe o nome");
                 return false;
             } else {
                 if (contato.getId() == 0) {
@@ -203,11 +181,7 @@ public class NewContactActivity extends AppCompatActivity {
                 return true;
             }
         } catch (Exception ex) {
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Erro ao inserir os dados: " + ex.getMessage());
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
-
+            MessageBox.showAlert(this, "Erro", "Erro ao salvar os dados" + ex.getMessage());
             return false;
         }
     }
@@ -215,14 +189,9 @@ public class NewContactActivity extends AppCompatActivity {
     private boolean excluir() {
         try {
             repositorioContato.excluirContato(contato.getId());
-
             return true;
         } catch (Exception ex) {
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Erro ao excluir os dados: " + ex.getMessage());
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
-
+            MessageBox.showAlert(this, "Erro", "Erro ao excluir os dados" + ex.getMessage());
             return false;
         }
     }
@@ -251,16 +220,8 @@ public class NewContactActivity extends AppCompatActivity {
     private class SelecionaDataListener implements DatePickerDialog.OnDateSetListener {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, month, dayOfMonth);
-            Date data = calendar.getTime();
-
-            DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
-            String dt = format.format(data);
-
-            edtDatasEspeciais.setText(dt);
-
-            contato.setDatasEspeciais(data);
+            edtDatasEspeciais.setText(DateUtils.dateToString(year, month, dayOfMonth));
+            contato.setDatasEspeciais(DateUtils.getDate(year, month, dayOfMonth));
         }
     }
 }

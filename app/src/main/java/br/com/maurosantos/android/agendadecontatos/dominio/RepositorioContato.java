@@ -25,38 +25,38 @@ public class RepositorioContato {
     private ContentValues preencheContentValues(Contato contato) {
         ContentValues values = new ContentValues();
 
-        values.put("NOME", contato.getNome());
-        values.put("TELEFONE", contato.getTelefone());
-        values.put("TIPOTELEFONE", contato.getTipoTelefone());
-        values.put("EMAIL", contato.getEmail());
-        values.put("TIPOEMAIL", contato.getTipoEmail());
-        values.put("ENDERECO", contato.getEndereco());
-        values.put("TIPOENDERECO", contato.getTipoEndereco());
-        values.put("DATASESPECIAIS", (contato.getDatasEspeciais() != null) ? contato.getDatasEspeciais().getTime() : null);
-        values.put("TIPODATASESPECIAIS", contato.getTipoDatasEspeciais());
-        values.put("GRUPOS", contato.getGrupos());
+        values.put(Contato.NOME, contato.getNome());
+        values.put(Contato.TELEFONE, contato.getTelefone());
+        values.put(Contato.TIPOTELEFONE, contato.getTipoTelefone());
+        values.put(Contato.EMAIL, contato.getEmail());
+        values.put(Contato.TIPOEMAIL, contato.getTipoEmail());
+        values.put(Contato.ENDERECO, contato.getEndereco());
+        values.put(Contato.TIPOENDERECO, contato.getTipoEndereco());
+        values.put(Contato.DATASESPECIAIS, (contato.getDatasEspeciais() != null) ? contato.getDatasEspeciais().getTime() : null);
+        values.put(Contato.TIPODATASESPECIAIS, contato.getTipoDatasEspeciais());
+        values.put(Contato.GRUPOS, contato.getGrupos());
 
         return values;
     }
 
     public void inserirContato(Contato contato) {
         ContentValues values = preencheContentValues(contato);
-        conn.insertOrThrow("CONTATO", null, values);
+        conn.insertOrThrow(Contato.TABELA, null, values);
     }
 
     public void alterarContato(Contato contato) {
         ContentValues values = preencheContentValues(contato);
-        conn.update("CONTATO", values, "_id = ?", new String[]{String.valueOf(contato.getId())});
+        conn.update(Contato.TABELA, values, "_id = ?", new String[]{String.valueOf(contato.getId())});
     }
 
     public void excluirContato(long id) {
-        conn.delete("CONTATO", "_id = ?", new String[]{String.valueOf(id)});
+        conn.delete(Contato.TABELA, "_id = ?", new String[]{String.valueOf(id)});
     }
 
     public ArrayAdapter<Contato> listaContatos(Context context) {
         ArrayAdapter<Contato> adpContatos = new ArrayAdapter<Contato>(context, android.R.layout.simple_list_item_1);
 
-        Cursor cursor = conn.query("CONTATO", null, null, null, null, null, null);
+        Cursor cursor = conn.query(Contato.TABELA, null, null, null, null, null, null);
 
         if (cursor.getCount() > 0) {
 

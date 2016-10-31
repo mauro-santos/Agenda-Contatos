@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Agenda-Contatos.iml" filepath="$PROJECT_DIR$/Agenda-Contatos.iml" />
-      <module fileurl="file://$PROJECT_DIR$/AgendaDeContatos.iml" filepath="$PROJECT_DIR$/AgendaDeContatos.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

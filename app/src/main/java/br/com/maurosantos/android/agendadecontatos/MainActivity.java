@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import br.com.maurosantos.android.agendadecontatos.app.MessageBox;
 import br.com.maurosantos.android.agendadecontatos.database.DataBase;
 import br.com.maurosantos.android.agendadecontatos.dominio.RepositorioContato;
 import br.com.maurosantos.android.agendadecontatos.dominio.entidades.Contato;
@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DataBase dataBase;
     private SQLiteDatabase conn;
     private RepositorioContato repositorioContato;
+
+    public static final String PARAM_CONTATO = "CONTATO";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             lstContatos.setAdapter(adpContatos);
         } catch (SQLException ex) {
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Erro ao criar o banco de dados: " + ex.getMessage());
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
+            MessageBox.showAlert(this, "Erro", "Erro ao criar o banco de dados: " + ex.getMessage());
         }
     }
 
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Contato contato = adpContatos.getItem(position);
 
         Intent it = new Intent(this, NewContactActivity.class);
-        it.putExtra("CONTATO", contato);
+        it.putExtra(PARAM_CONTATO, contato);
 
         startActivityForResult(it, 0);
     }

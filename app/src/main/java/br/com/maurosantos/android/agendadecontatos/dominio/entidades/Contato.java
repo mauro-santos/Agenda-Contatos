@@ -8,6 +8,9 @@ import java.util.Date;
  */
 
 public class Contato implements Serializable {
+
+    public static String TABELA = "CONTATO";
+
     public static String ID = "_id";
     public static String NOME = "NOME";
     public static String TELEFONE = "TELEFONE";
