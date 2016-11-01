@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText edtPesquisa;
     private ListView lstContatos;
 
-    private ArrayAdapter<Contato> adpContatos;
+    private ContatoArrayAdapter adpContatos;
 
     private DataBase dataBase;
     private SQLiteDatabase conn;
@@ -86,9 +86,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private class FiltraDados implements TextWatcher {
-        private ArrayAdapter<Contato> arrayAdapter;
+        private ContatoArrayAdapter arrayAdapter;
 
-        private FiltraDados(ArrayAdapter<Contato> arrayAdapter) {
+        private FiltraDados(ContatoArrayAdapter arrayAdapter) {
             this.arrayAdapter = arrayAdapter;
         }
 
