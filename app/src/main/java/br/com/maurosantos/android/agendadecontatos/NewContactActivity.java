@@ -92,6 +92,7 @@ public class NewContactActivity extends AppCompatActivity {
         ExibeDataListener listener = new ExibeDataListener();
         edtDatasEspeciais.setOnClickListener(listener);
         edtDatasEspeciais.setOnFocusChangeListener(listener);
+        edtDatasEspeciais.setKeyListener(null);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -108,6 +109,15 @@ public class NewContactActivity extends AppCompatActivity {
             repositorioContato = new RepositorioContato(conn);
         } catch (SQLException ex) {
             MessageBox.showAlert(this, "Erro", "Erro ao conectar ao banco de dados" + ex.getMessage());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (conn != null) {
+            conn.close();
         }
     }
 

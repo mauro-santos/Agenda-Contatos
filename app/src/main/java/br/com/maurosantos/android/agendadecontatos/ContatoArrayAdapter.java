@@ -18,11 +18,13 @@ public class ContatoArrayAdapter extends ArrayAdapter<Contato> {
 
     private int resource;
     private LayoutInflater inflater;
+    private Context context;
 
     public ContatoArrayAdapter(Context context, int resource) {
         super(context, resource);
-        inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.resource = resource;
+        this.context = context;
     }
 
     @NonNull
@@ -31,8 +33,7 @@ public class ContatoArrayAdapter extends ArrayAdapter<Contato> {
         View view = null;
         ViewHolder viewHolder = null;
 
-        if(convertView == null)
-        {
+        if (convertView == null) {
             viewHolder = new ViewHolder();
 
             view = inflater.inflate(resource, parent, false);
@@ -44,16 +45,20 @@ public class ContatoArrayAdapter extends ArrayAdapter<Contato> {
             view.setTag(viewHolder);
 
             convertView = view;
-        }
-        else
-        {
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
             view = convertView;
         }
 
         Contato contato = getItem(position);
 
-        viewHolder.txtCor.setBackgroundColor(view.getResources().getColor(android.R.color.holo_blue_dark));
+        if (contato.getNome().toUpperCase().startsWith("A"))
+            viewHolder.txtCor.setBackgroundColor(context.getResources().getColor(R.color.azul));
+        else if (contato.getNome().toUpperCase().startsWith("B"))
+            viewHolder.txtCor.setBackgroundColor(context.getResources().getColor(R.color.vermelho));
+        else
+            viewHolder.txtCor.setBackgroundColor(context.getResources().getColor(R.color.verde));
+
         viewHolder.txtNome.setText(contato.getNome());
         viewHolder.txtTelefone.setText(contato.getTelefone());
 
