@@ -94,6 +94,7 @@ public class NewContactActivity extends AppCompatActivity {
         edtDatasEspeciais.setOnFocusChangeListener(listener);
         edtDatasEspeciais.setKeyListener(null);
 
+        // Formulário utilizado para o Editar.
         Bundle bundle = getIntent().getExtras();
 
         if ((bundle != null) && (bundle.containsKey(MainActivity.PARAM_CONTATO))) {

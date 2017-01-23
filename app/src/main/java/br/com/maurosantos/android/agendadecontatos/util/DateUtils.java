@@ -12,19 +12,19 @@ public class DateUtils {
     public static Date getDate(int year, int month, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, dayOfMonth);
+
         return calendar.getTime();
     }
 
     public static String dateToString(int year, int month, int dayOfMonth) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, dayOfMonth);
-
         DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
-        return format.format(calendar.getTime());
+
+        return format.format(getDate(year, month, dayOfMonth));
     }
 
     public static String dateToString(Date date) {
         DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
+
         return format.format(date);
     }
 }
